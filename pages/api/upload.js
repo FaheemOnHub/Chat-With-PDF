@@ -4,6 +4,7 @@ import connectDB from "@/public/src/models/db";
 import uploadPDF from "@/public/src/models/cloudinary";
 import slugify from "slugify";
 import pinecone, { initializePinecone } from "@/public/src/models/pinecone";
+import MyFileModel from "@/public/src/models/myFile";
 
 export default async function handler(req, res) {
   if (req.method != "POST") {
@@ -63,11 +64,11 @@ export default async function handler(req, res) {
       //create a index
       await createPineconeIndex(fileSlug);
       //save file in mongodb
-      // const myFile = my MyFileModel({
-      //   fileName:file.name,
-      //   fileUrl:data,
-      //   vectorIndex:fileSlug
-      // })
+      const myFile = new MyFileModel({
+        fileName: file.name,
+        fileUrl: data,
+        vectorIndex: fileSlug,
+      });
       await myFile.save();
       return res.status(200).json("file uploaded to cloudinary");
     });
